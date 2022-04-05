@@ -79,7 +79,7 @@ function onMessage(room, msg, sender, isGroupChat, replier, imageDB, packageName
     }
     if(msg == "/대화종료" && sender == "김형민"){
         PingpongRunMode = false;
-        replier.reply(adminID + '빠이 ㅅㄱㅕ! :)');
+        replier.reply(adminID + '빠이 ㅅㄱ! :)');
         adminID = "";
         return;
     }
