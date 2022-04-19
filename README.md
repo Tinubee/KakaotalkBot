@@ -1,4 +1,4 @@
-# HyoungminBot
+# Hyoungmin's KakaotalkBot
 
 - archethic님의 KakaoLink Module 사용
 - Link:https://github.com/archethic/kakaolink
