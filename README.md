@@ -1,7 +1,7 @@
 # HyoungminBot
 
 - archethic님의 KakaoLink Module 사용
-  ✔️Link:https://github.com/archethic/kakaolink
+✔️Link:https://github.com/archethic/kakaolink
 
 ## 1.채팅기록
 
