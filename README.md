@@ -3,6 +3,12 @@
 - archethic님의 KakaoLink Module 사용
 - Link:https://github.com/archethic/kakaolink
 
+- To Do List
+  [ ] 방목록 정리
+  [ ] 방목록 확인 및 메세지 처리
+  [ ] 방 등록 및 해제
+  [ ] 클래시로얄 모듈 만들기
+
 ## 1.채팅기록
 
 ## 2.코로나정보
