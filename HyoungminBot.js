@@ -1,6 +1,6 @@
 const { KakaoLinkClient } = require("kakaolink");
-const AccountinfoPath = "sdcard/msgbot/Bots/HyoungminBot/accountinfo.json";
-const infojson = JSON.parse(FileStream.read(AccountinfoPath));
+const InfoPath = "sdcard/msgbot/Bots/HyoungminBot/Info.json";
+const infojson = JSON.parse(FileStream.read(InfoPath));
 
 const kakaoapikey = infojson["AccountInfo"]["KaKao_APIKey"];
 const KaKao_Email = infojson["AccountInfo"]["Kakao_Email"];
@@ -20,8 +20,9 @@ const Wikifuction = require("Wikimodule");
 const Weatherfuction = require("Weathermodule");
 const Covid19fuction = require("Covid19module");
 const ClashRoyale = require("Clashroyalemodule");
+const Pingpongfuction = require("Pingpongmodule");
 
-const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB; // 메봇만 됨
+const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
 const Replier = com.xfl.msgbot.script.api.legacy.SessionCacheReplier;
 
 const scriptName = "HyoungminBot"; // 아마 꼭 넣어주세요
@@ -47,10 +48,10 @@ let jsonadmin = JSON.parse(fs.read(pathadmin));
 
 let PingpongRunMode = false;
 let adminID = "";
-let sjcount = 0;
-let nsjnumber = 0;
+let RegisterRooms = [];
+RegisterRooms = infojson["RegisterRoom"];
 //실질적으로 작동하는 부분 (메세지 오면 답장하는부분)
-function onMessage(
+function responseFix(
   room,
   msg,
   sender,
@@ -59,28 +60,6 @@ function onMessage(
   imageDB,
   packageName
 ) {
-  if (sender == "노승준" && msg.length > 2) {
-    if (msg == "이모티콘을 보냈습니다" || msg == "사진을 보냈습니다") {
-      return;
-    }
-    sjcount++;
-    if (sjcount > nsjnumber) {
-      nsjnumber = parseInt(Math.random() * 5) + 1;
-      let rep_sjmsg = [
-        "승준아 아갈창 닫자",
-        "승준아 좀 닥쳐라 ㅡㅡ",
-        "닥쳐라승준아",
-        "승준아 제발 쫌 ㅡㅡ",
-        "닥쳐 이 새끼야",
-      ];
-      let nu = parseInt(Math.random() * rep_sjmsg.length);
-
-      replier.reply(rep_sjmsg[nu]);
-      sjcount = 0;
-      return;
-    }
-  }
-
   if (msg.startsWith("/대화시작") && sender == "김형민") {
     PingpongRunMode = true;
     adminID = msg.substr(5).split(" ")[1].trim();
@@ -88,17 +67,17 @@ function onMessage(
       replier.reply("사용자를 입력해주세요");
       return;
     }
-    replier.reply(adminID + "하이!^_^");
+    replier.reply(adminID + "하이 ^_^");
     return;
   }
   if (msg == "/대화종료" && sender == "김형민") {
     PingpongRunMode = false;
-    replier.reply(adminID + "빠이 ㅅㄱ! :)");
+    replier.reply(adminID + "빠이 ㅅㄱ");
     adminID = "";
     return;
   }
   if (PingpongRunMode && sender == adminID) {
-    pingpong(msg, replier);
+    Pingpongfuction(room, msg, sender, replier, Pingpong_key);
   }
 
   if (room == "가족") {
@@ -211,42 +190,6 @@ function bugipicture(room, replier) {
     );
   } catch (error) {
     replier.reply(error);
-  }
-}
-
-function pingpong(msg, replier) {
-  try {
-    let Key = Pingpong_key;
-    var json = {
-      request: {
-        query: msg,
-      },
-    };
-    var message = JSON.parse(
-      org.jsoup.Jsoup.connect(
-        "https://builder.pingpong.us/api/builder/623422bde4b019e73845debb/integration/v0.2/custom/" +
-          Key
-      )
-        .header("Authorization", "Basic " + Key)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .requestBody(JSON.stringify(json))
-        .ignoreContentType(true)
-        .ignoreHttpErrors(true)
-        .post()
-        .text()
-    );
-
-    try {
-      for (var k = 0; k < message.response.replies.length; k++) {
-        if (message.response.replies[k].text) {
-          replier.reply(message.response.replies[k].text);
-        }
-      }
-    } catch (e) {
-      replier.reply(message.response.replies.text);
-    }
-  } catch (e) {
-    replier.reply(e + e.lineNumber);
   }
 }
 
@@ -373,46 +316,78 @@ function MsgParaphrasing(Amsg, Bmsg, replier) {
     replier.reply(error);
   }
 }
-//안드로이드 11 업데이트 내역(단톡방 불러오는 변수 변경으로 인해 채팅방명 안불러와지는현상
-function onNotificationPosted(notif, sm) {
-  if (!notif.getPackageName().startsWith("com.kakao.t")) return;
-  const extender = new android.app.Notification.WearableExtender(
-    notif.getNotification()
+
+function onNotificationPosted(sbn, sm) {
+  var packageName = sbn.getPackageName();
+  if (!packageName.startsWith("com.kakao.tal")) return;
+  var actions = sbn.getNotification().actions;
+  if (actions == null) return;
+  var act = actions[actions.length - 1];
+  var bundle = sbn.getNotification().extras;
+
+  var msg = bundle.get("android.text").toString();
+  var sender = bundle.getString("android.title");
+  var room = bundle.getString("android.subText");
+  if (room == null) room = bundle.getString("android.summaryText");
+  var isGroupChat = room != null;
+  var replier = new com.xfl.msgbot.script.api.legacy.SessionCacheReplier(
+    packageName,
+    act,
+    room,
+    false,
+    ""
   );
-  extender.getActions().forEach((action) => {
-    if (
-      new java.lang.String(String(action.title).toLowerCase()).contains(
-        "reply"
-      ) ||
-      new java.lang.String(
-        String(action.title).toString().toLowerCase()
-      ).contains("답장")
-    ) {
-      let data = notif.getNotification().extras;
-      let sender = data.get("android.messagingUser").getName().toString();
-      let msg = data.get("android.text").toString();
-      let room =
-        data.getString("android.subText") || data.getString("android.title");
-      let isGroupChat = data.getBoolean("android.isGroupConversation");
-      let packageName = notif.getPackageName();
-      const replier = new Replier(packageName, action, room, false, scriptName);
-      const bitmap = data.get("android.messagingUser").getIcon().getBitmap();
-      const imageDB = new ImageDB(bitmap, bitmap);
-      com.xfl.msgbot.application.service.NotificationListener.Companion.setSession(
-        packageName,
-        room,
-        action
-      );
-      onMessage.call(
-        this,
-        room,
-        msg,
-        sender,
-        isGroupChat,
-        replier,
-        imageDB,
-        packageName
-      );
-    }
-  });
+  var icon = bundle
+    .getParcelable("android.messagingUser")
+    .getIcon()
+    .getBitmap();
+  var image = bundle.getBundle("android.wearable.EXTENSIONS");
+  if (image != null) image = image.getParcelable("background");
+  var imageDB = new com.xfl.msgbot.script.api.legacy.ImageDB(icon, image);
+  com.xfl.msgbot.application.service.NotificationListener.e.put(room, act);
+  responseFix(room, msg, sender, isGroupChat, replier, imageDB, packageName);
 }
+
+//안드로이드 11 업데이트 내역(단톡방 불러오는 변수 변경으로 인해 채팅방명 안불러와지는현상
+// function onNotificationPosted(notif, sm) {
+//   if (!notif.getPackageName().startsWith("com.kakao.t")) return;
+//   const extender = new android.app.Notification.WearableExtender(
+//     notif.getNotification()
+//   );
+//   extender.getActions().forEach((action) => {
+//     if (
+//       new java.lang.String(String(action.title).toLowerCase()).contains(
+//         "reply"
+//       ) ||
+//       new java.lang.String(
+//         String(action.title).toString().toLowerCase()
+//       ).contains("답장")
+//     ) {
+//       let data = notif.getNotification().extras;
+//       let sender = data.get("android.messagingUser").getName().toString();
+//       let msg = data.get("android.text").toString();
+//       let room =
+//         data.getString("android.subText") || data.getString("android.title");
+//       let isGroupChat = data.getBoolean("android.isGroupConversation");
+//       let packageName = notif.getPackageName();
+//       const replier = new Replier(packageName, action, room, false, scriptName);
+//       const bitmap = data.get("android.messagingUser").getIcon().getBitmap();
+//       const imageDB = new ImageDB(bitmap, bitmap);
+//       com.xfl.msgbot.application.service.NotificationListener.Companion.setSession(
+//         packageName,
+//         room,
+//         action
+//       );
+//       onMessage.call(
+//         this,
+//         room,
+//         msg,
+//         sender,
+//         isGroupChat,
+//         replier,
+//         imageDB,
+//         packageName
+//       );
+//     }
+//   });
+// }
