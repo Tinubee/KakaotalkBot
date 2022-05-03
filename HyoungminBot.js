@@ -295,6 +295,7 @@ function MsgParaphrasing(Amsg, Bmsg, replier) {
   }
 }
 
+//카카오톡 9.7.5 이상 버전에서 사용하는 기능
 function onNotificationPosted(sbn, sm) {
   var packageName = sbn.getPackageName();
   if (!packageName.startsWith("com.kakao.tal")) return;
@@ -325,47 +326,3 @@ function onNotificationPosted(sbn, sm) {
   com.xfl.msgbot.application.service.NotificationListener.e.put(room, act);
   responseFix(room, msg, sender, isGroupChat, replier, imageDB, packageName);
 }
-
-//안드로이드 11 업데이트 내역(단톡방 불러오는 변수 변경으로 인해 채팅방명 안불러와지는현상
-// function onNotificationPosted(notif, sm) {
-//   if (!notif.getPackageName().startsWith("com.kakao.t")) return;
-//   const extender = new android.app.Notification.WearableExtender(
-//     notif.getNotification()
-//   );
-//   extender.getActions().forEach((action) => {
-//     if (
-//       new java.lang.String(String(action.title).toLowerCase()).contains(
-//         "reply"
-//       ) ||
-//       new java.lang.String(
-//         String(action.title).toString().toLowerCase()
-//       ).contains("답장")
-//     ) {
-//       let data = notif.getNotification().extras;
-//       let sender = data.get("android.messagingUser").getName().toString();
-//       let msg = data.get("android.text").toString();
-//       let room =
-//         data.getString("android.subText") || data.getString("android.title");
-//       let isGroupChat = data.getBoolean("android.isGroupConversation");
-//       let packageName = notif.getPackageName();
-//       const replier = new Replier(packageName, action, room, false, scriptName);
-//       const bitmap = data.get("android.messagingUser").getIcon().getBitmap();
-//       const imageDB = new ImageDB(bitmap, bitmap);
-//       com.xfl.msgbot.application.service.NotificationListener.Companion.setSession(
-//         packageName,
-//         room,
-//         action
-//       );
-//       onMessage.call(
-//         this,
-//         room,
-//         msg,
-//         sender,
-//         isGroupChat,
-//         replier,
-//         imageDB,
-//         packageName
-//       );
-//     }
-//   });
-// }
