@@ -60,6 +60,9 @@ function responseFix(
   imageDB,
   packageName
 ) {
+  if (isGroupChat == false) {
+    room = sender; //개인톡은 room이 null로들어와서 변경.
+  }
   if (msg.startsWith("/대화시작") && sender == "김형민") {
     PingpongRunMode = true;
     adminID = msg.substr(5).split(" ")[1].trim();
@@ -102,72 +105,47 @@ function responseFix(
       return;
     }
     Deeplearningfuction(room, msg, sender, replier);
-  } else if (room == "김형민" || room == "임세현") {
-    Chatlogfuction(msg, room, sender, replier);
-    if (msg.startsWith("/문장분석")) {
-      MsgParaphrasing(msg, replier);
-    }
-    if (msg.startsWith("/검색")) {
-      Wikifuction(msg, WiKiaccess_key, replier);
-    }
-    if (msg == "로또추천") {
-      Lottofuction(Kakao, room, sender);
-      return;
-    }
-    if (msg.startsWith("코로나")) {
-      Covid19fuction(Kakao, msg, room, replier);
-      return;
-    }
-    if (msg.startsWith("/업비트")) {
-      UpbitCoinInfo(msg, replier);
-      return;
-    }
-    if (msg == "메뉴추천") {
-      menuReccomend(room, replier);
-      return;
-    }
-    if (msg.startsWith("날씨")) {
-      Weatherfuction(Kakao, msg, room, replier);
-      return;
-    }
-    if (msg.startsWith("부기사진")) {
-      bugipicture(room, replier);
-      return;
-    }
-    Deeplearningfuction(room, msg, sender, replier);
   } else if (
+    room == "김형민" ||
+    room == "임세현" ||
     room == "짜잔" ||
     room == "형용셉" ||
     room == "멤브레인" ||
     room == "친구들" ||
     room == "형민테스트방"
-  ) {
+  )
     Chatlogfuction(msg, room, sender, replier);
-    if (msg.startsWith("/검색")) {
-      Wikifuction(msg, WiKiaccess_key, replier);
-    }
-    if (msg == "로또추천") {
-      Lottofuction(Kakao, room, sender);
-      return;
-    }
-    if (msg.startsWith("코로나")) {
-      Covid19fuction(Kakao, msg, room, replier);
-      return;
-    }
-    if (msg.startsWith("/업비트")) {
-      UpbitCoinInfo(msg, replier);
-      return;
-    }
-    if (msg.startsWith("날씨")) {
-      Weatherfuction(Kakao, msg, room, replier);
-      return;
-    }
-    if (msg == "메뉴추천") {
-      menuReccomend(room, replier);
-      return;
-    }
-    Deeplearningfuction(room, msg, sender, replier);
+  if (msg.startsWith("/문장분석")) {
+    MsgParaphrasing(msg, replier);
   }
+  if (msg.startsWith("/검색")) {
+    Wikifuction(msg, WiKiaccess_key, replier);
+  }
+  if (msg == "로또추천") {
+    Lottofuction(Kakao, room, sender);
+    return;
+  }
+  if (msg.startsWith("코로나")) {
+    Covid19fuction(Kakao, msg, room, replier);
+    return;
+  }
+  if (msg.startsWith("/업비트")) {
+    UpbitCoinInfo(msg, replier);
+    return;
+  }
+  if (msg == "메뉴추천") {
+    menuReccomend(room, replier);
+    return;
+  }
+  if (msg.startsWith("날씨")) {
+    Weatherfuction(Kakao, msg, room, replier);
+    return;
+  }
+  if (msg.startsWith("부기사진")) {
+    bugipicture(room, replier);
+    return;
+  }
+  Deeplearningfuction(room, msg, sender, replier);
 }
 
 function bugipicture(room, replier) {
