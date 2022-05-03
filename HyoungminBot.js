@@ -19,7 +19,7 @@ const Deeplearningfuction = require("Deeplearningmodule");
 const Wikifuction = require("Wikimodule");
 const Weatherfuction = require("Weathermodule");
 const Covid19fuction = require("Covid19module");
-const ClashRoyale = require("Clashroyalemodule");
+const ClashRoyalefuction = require("Clashroyalemodule");
 const Pingpongfuction = require("Pingpongmodule");
 
 const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
@@ -32,6 +32,7 @@ const pathdb = "sdcard/msgbot/Database/학습목록.txt";
 const pathBenWord = "sdcard/msgbot/Database/금지어.txt";
 const pathblacklist = "sdcard/msgbot/Database/블랙리스트.txt";
 const pathadmin = "sdcard/msgbot/Database/관리자.txt";
+const pathPlayertag = "sdcard/msgbot/Database/player.txt";
 
 const line = "\n" + "\u2501".repeat(9) + "\n";
 const Lw = "\u200b".repeat(500);
@@ -40,11 +41,13 @@ if (!fs.read(pathdb)) fs.write(pathdb, "{}");
 if (!fs.read(pathBenWord)) fs.write(pathBenWord, "{}");
 if (!fs.read(pathblacklist)) fs.write(pathblacklist, "{}");
 if (!fs.read(pathadmin)) fs.write(pathadmin, "{}");
+if (!fs.read(pathPlayertag)) fs.write(pathPlayertag, "{}");
 
 let jsondb = JSON.parse(fs.read(pathdb));
 let jsonBenWord = JSON.parse(fs.read(pathBenWord));
 let jsonblacklist = JSON.parse(fs.read(pathblacklist));
 let jsonadmin = JSON.parse(fs.read(pathadmin));
+let jsonPlayer = JSON.parse(fs.read(pathPlayertag));
 
 let PingpongRunMode = false;
 let adminID = "";
@@ -115,6 +118,9 @@ function responseFix(
     room == "형민테스트방"
   )
     Chatlogfuction(msg, room, sender, replier);
+  if (msg.startsWith("/클로검색") || msg.startsWith("/태그등록")) {
+    ClashRoyalefuction(Kakao, msg, imageDB, room, replier);
+  }
   if (msg.startsWith("/문장분석")) {
     MsgParaphrasing(msg, replier);
   }
