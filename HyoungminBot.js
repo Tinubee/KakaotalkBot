@@ -20,6 +20,7 @@ const Wikifuction = require("Wikimodule");
 const Weatherfuction = require("Weathermodule");
 const Covid19fuction = require("Covid19module");
 const ClashRoyalefuction = require("Clashroyalemodule");
+const ClashroyalClanfuntion = require("ClashroyalClan");
 const Pingpongfuction = require("Pingpongmodule");
 
 const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
@@ -32,7 +33,7 @@ const pathdb = "sdcard/msgbot/Database/학습목록.txt";
 const pathBenWord = "sdcard/msgbot/Database/금지어.txt";
 const pathblacklist = "sdcard/msgbot/Database/블랙리스트.txt";
 const pathadmin = "sdcard/msgbot/Database/관리자.txt";
-const pathPlayertag = "sdcard/msgbot/Database/player.txt";
+const pathPlayerInfo = "sdcard/msgbot/Database/player.txt";
 
 const line = "\n" + "\u2501".repeat(9) + "\n";
 const Lw = "\u200b".repeat(500);
@@ -41,18 +42,20 @@ if (!fs.read(pathdb)) fs.write(pathdb, "{}");
 if (!fs.read(pathBenWord)) fs.write(pathBenWord, "{}");
 if (!fs.read(pathblacklist)) fs.write(pathblacklist, "{}");
 if (!fs.read(pathadmin)) fs.write(pathadmin, "{}");
-if (!fs.read(pathPlayertag)) fs.write(pathPlayertag, "{}");
+if (!fs.read(pathPlayerInfo)) fs.write(pathPlayerInfo, "{}");
 
 let jsondb = JSON.parse(fs.read(pathdb));
 let jsonBenWord = JSON.parse(fs.read(pathBenWord));
 let jsonblacklist = JSON.parse(fs.read(pathblacklist));
 let jsonadmin = JSON.parse(fs.read(pathadmin));
-let jsonPlayer = JSON.parse(fs.read(pathPlayertag));
+let jsonPlayer = JSON.parse(fs.read(pathPlayerInfo));
 
 let PingpongRunMode = false;
 let adminID = "";
 let RegisterRooms = [];
 RegisterRooms = infojson["RegisterRoom"];
+
+const clanArray = ["본기", "2기", "플기", "3기", "Z기", "쉼터"];
 //실질적으로 작동하는 부분 (메세지 오면 답장하는부분)
 function responseFix(
   room,
@@ -86,6 +89,21 @@ function responseFix(
     Pingpongfuction(room, msg, sender, replier, Pingpong_key);
   }
 
+  if (room == "클로테스트") {
+    if (
+      msg.startsWith("/내정보") ||
+      msg.startsWith("/태그등록") ||
+      msg.startsWith("/내정보삭제")
+    ) {
+      ClashRoyalefuction(Kakao, msg, imageDB, room, replier);
+      return;
+    }
+    if (msg.startsWith("/클랜전") || msg.startsWith("/클랜지원률")) {
+      ClashroyalClanfuntion(Kakao, msg, imageDB, room, replier);
+      return;
+    }
+  }
+
   if (room == "가족") {
     if (msg == "로또추천") {
       Lottofuction(Kakao, roomName, sender);
@@ -114,46 +132,53 @@ function responseFix(
     room == "짜잔" ||
     room == "형용셉" ||
     room == "멤브레인" ||
-    room == "친구들" ||
-    room == "형민테스트방"
-  )
+    room == "친구들"
+  ) {
     Chatlogfuction(msg, room, sender, replier);
-  if (msg.startsWith("/클로검색") || msg.startsWith("/태그등록")) {
-    ClashRoyalefuction(Kakao, msg, imageDB, room, replier);
-  }
-  if (msg.startsWith("/문장분석")) {
-    MsgParaphrasing(msg, replier);
-  }
-  if (msg.startsWith("/검색")) {
-    Wikifuction(msg, WiKiaccess_key, replier);
-  }
-  if (msg == "로또추천") {
-    Lottofuction(Kakao, room, sender);
-    return;
-  }
-  if (msg.startsWith("코로나")) {
-    Covid19fuction(Kakao, msg, room, replier);
-    return;
-  }
-  if (msg.startsWith("/업비트")) {
-    UpbitCoinInfo(msg, replier);
-    return;
-  }
-  if (msg == "메뉴추천") {
-    menuReccomend(room, replier);
-    return;
-  }
-  if (msg.startsWith("날씨")) {
-    Weatherfuction(Kakao, msg, room, replier);
-    return;
-  }
-  if (msg.startsWith("부기사진")) {
-    bugipicture(room, replier);
-    return;
-  }
-  Deeplearningfuction(room, msg, sender, replier);
-}
+    if (msg.startsWith("/내정보") || msg.startsWith("/태그등록")) {
+      ClashRoyalefuction(Kakao, msg, imageDB, room, replier);
+      return;
+    }
+    if (msg.startsWith("/클랜전") || msg.startsWith("/클랜지원률")) {
+      ClashroyalClanfuntion(Kakao, msg, imageDB, room, replier);
+      return;
+    }
 
+    if (msg.startsWith("/문장분석")) {
+      MsgParaphrasing(msg, replier);
+      return;
+    }
+    if (msg.startsWith("/검색")) {
+      Wikifuction(msg, WiKiaccess_key, replier);
+      return;
+    }
+    if (msg == "로또추천") {
+      Lottofuction(Kakao, room, sender);
+      return;
+    }
+    if (msg.startsWith("코로나")) {
+      Covid19fuction(Kakao, msg, room, replier);
+      return;
+    }
+    if (msg.startsWith("/업비트")) {
+      UpbitCoinInfo(msg, replier);
+      return;
+    }
+    if (msg == "메뉴추천") {
+      menuReccomend(room, replier);
+      return;
+    }
+    if (msg.startsWith("날씨")) {
+      Weatherfuction(Kakao, msg, room, replier);
+      return;
+    }
+    if (msg.startsWith("부기사진")) {
+      bugipicture(room, replier);
+      return;
+    }
+    Deeplearningfuction(room, msg, sender, replier);
+  }
+}
 function bugipicture(room, replier) {
   try {
     let number = parseInt(Math.random() * 15) + 1;
