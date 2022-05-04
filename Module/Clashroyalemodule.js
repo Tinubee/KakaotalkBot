@@ -5,7 +5,7 @@ function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
       replier.reply("⚠️삭제할 정보가 없습니다.");
       return;
     } else {
-      jsonPlayer[profileHash] = {};
+      delete jsonPlayer[profileHash];
       fs.write(pathPlayerInfo, JSON.stringify(jsonPlayer, null, 4));
     }
     replier.reply("⚠️삭제가 완료되었습니다.\n삭제된 프로필 : " + profileHash);
@@ -18,11 +18,17 @@ function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
     if (jsonPlayer[profileHash] == undefined) jsonPlayer[profileHash] = {};
 
     let player_tag = msg.substr(4);
-    let player_url = "https://royaleapi.com/player/" + player_tag;
-    let html = org.jsoup.Jsoup.connect(player_url).get();
-    let tagCheck = html.select("#sticky_context > h4").text();
+    let player_url_json =
+      "https://link-api.clashroyale.com/players/%23" + player_tag;
+    let res = org.jsoup.Jsoup.connect(player_url_json)
+      .ignoreContentType(true)
+      .ignoreHttpErrors(true)
+      .get()
+      .text();
 
-    if (tagCheck) {
+    let data = JSON.parse(res);
+
+    if (data.reason == "notFound") {
       replier.reply(
         "해당 태그의 유저를 조회 할 수 없습니다. 태그를 다시 확인해주세요."
       );
@@ -34,38 +40,15 @@ function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
         );
         return;
       }
-      let player_nickname = html
-        .select(
-          "#page_content > div:nth-child(5) > div.ui.top.attached.padded.segment > div.p_header_container > div:nth-child(1) > h1"
-        )
-        .text();
-      let player_clanName = html
-        .select(
-          "div.player__profile_header_container > div.player_aux_info > div.ui.horizontal.divided.list > div.ui.header.item > a"
-        )
-        .text();
+      let player_nickname = data.name;
+      let player_clanName = data.clan.name;
       jsonPlayer[profileHash]["player_clanName"] = player_clanName;
-      //클랜명 확인후 저장은 클랜명 태그로 저장
-      //["본기", "2기", "플기", "3기", "Z기", "쉼터"];
-      //본기 : YJQRVLGY
-      //2기 : YJY8VJJQ
-      //3기 : YVQ0L9RC
-      //플기 : PQGQPCC9
-      //Z기 : LPLLYQQU
-      //쉼터 : LC0UG8YV
-      let player_clanNameHash = "";
-      if (player_clanName == "ALONE") player_clanNameHash = "YJQRVLGY";
-      else if (player_clanName == "ALONE 2기") player_clanNameHash = "YJY8VJJQ";
-      else if (player_clanName == "ALONE 3기") player_clanNameHash = "YVQ0L9RC";
-      else if (player_clanName == "ALONE 플기")
-        player_clanNameHash = "PQGQPCC9";
-      else if (player_clanName == "ALONE Z기") player_clanNameHash = "LPLLYQQU";
-      else if (player_clanName == "ALONE 클랜쉼터")
-        player_clanNameHash = "LC0UG8YV";
-
       jsonPlayer[profileHash]["player_tag"] = player_tag;
       jsonPlayer[profileHash]["player_nickname"] = player_nickname;
-      jsonPlayer[profileHash]["player_clanNameHash"] = player_clanNameHash;
+      jsonPlayer[profileHash]["player_clanNameHash"] = data.clan.tag.replace(
+        "#",
+        ""
+      );
 
       fs.write(pathPlayerInfo, JSON.stringify(jsonPlayer, null, 4));
       replier.reply(
@@ -75,8 +58,8 @@ function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
           player_tag +
           "\n클랜명 : " +
           player_clanName +
-          " (#" +
-          player_clanNameHash +
+          " (" +
+          data.clan.tag +
           ")" +
           "\n등록되었습니다."
       );
@@ -95,37 +78,33 @@ function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
     let player_tag = jsonPlayer[profileHash]["player_tag"];
     let player_url = "https://royaleapi.com/player/" + player_tag;
     let html = org.jsoup.Jsoup.connect(player_url).get();
-
-    let userScore = html
-      .select(
-        "div.ui.top.attached.padded.segment > div.player__profile_header_container > div.ui.horizontal.list > div:nth-child(1)"
-      )
+    let player_url_json =
+      "https://link-api.clashroyale.com/players/%23" + player_tag;
+    let res = org.jsoup.Jsoup.connect(player_url_json)
+      .ignoreContentType(true)
+      .ignoreHttpErrors(true)
+      .get()
       .text();
+
+    let data = JSON.parse(res);
+    let userScore = data.trophies;
     //#page_content > div:nth-child(5) > div.ui.top.attached.padded.segment > div:nth-child(1) > img
     let userScoreImage = html
       .select(
         "#page_content > div:nth-child(5) > div.ui.top.attached.padded.segment > div:nth-child(1) > img"
       )
       .attr("src");
-    let clanName = html
-      .select(
-        "div.player__profile_header_container > div.player_aux_info > div.ui.horizontal.divided.list > div.ui.header.item > a"
-      )
-      .text();
+    let clanName = data.clan.name;
 
     if (clanName != jsonPlayer[profileHash]["player_clanName"]) {
       jsonPlayer[profileHash]["player_clanName"] = clanName;
       fs.write(pathPlayerInfo, JSON.stringify(jsonPlayer, null, 4));
     }
 
-    let userLastscore = html
-      .select(
-        "#stats > div:nth-child(7) > div > div:nth-child(1) > div > table > tbody > tr:nth-child(14) > td.right.aligned"
-      )
-      .text();
-    let userScore_split = userScore.split("/");
-    userScore = userScore_split[0] + "🏆";
-    let highScore = userScore_split[1];
+    let userLastscore = data.leagueStatistics.previousSeason.trophies;
+
+    userScore = userScore + "🏆";
+    let highScore = data.bestTrophies;
     Kakao.sendLink(
       room,
       {
@@ -135,9 +114,10 @@ function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
           USER_SCORE: userScore,
           USER_SCORE_IMG: userScoreImage,
           CLAN_NAME: clanName,
+          ARENA: data.arena.name,
           HIGH_SCORE: highScore,
-          USER_SCORE_LAST: userLastscore.replace(",", ""),
-          USER_HASHCODE: "#" + player_tag,
+          USER_SCORE_LAST: userLastscore,
+          USER_HASHCODE: player_tag,
         },
       },
       "custom"
