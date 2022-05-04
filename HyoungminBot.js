@@ -109,6 +109,10 @@ function responseFix(
       );
       return;
     }
+    if (msg.startsWith("/상자")) {
+      ClashroyalChestfuntion(Kakao, sender, msg, imageDB, room, replier);
+      return;
+    }
     Deeplearningfuction(room, msg, sender, replier);
   }
 

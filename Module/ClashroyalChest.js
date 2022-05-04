@@ -25,7 +25,13 @@ function ClashroyalChest(Kakao, sender, msg, imageDB, room, replier) {
     );
 
     let chest_classname = chest_url.attr("class");
-    if (chest_classname.includes("chest")) {
+    if (
+      chest_classname.includes("silver") ||
+      chest_classname.includes("golden") ||
+      chest_classname.includes("magical") ||
+      chest_classname.includes("royalwild") ||
+      chest_classname.includes("legendary")
+    ) {
       let chest_name = chest_classname;
       let chest_count = player_url_html
         .select(
@@ -42,23 +48,10 @@ function ClashroyalChest(Kakao, sender, msg, imageDB, room, replier) {
 
       chest_name = chest_name == "chest silver" ? "실버 상자" : chest_name;
       chest_name = chest_name == "chest golden" ? "골드 상자" : chest_name;
-      chest_name = chest_name == "chest giant" ? "자이언트 상자" : chest_name;
-      chest_name = chest_name == "chest goldcrate" ? "골드 보관함" : chest_name;
-      chest_name =
-        chest_name == "chest plentifulgoldcrate"
-          ? "풍부한 골드 보관함"
-          : chest_name;
-      chest_name =
-        chest_name == "chest overflowinggoldcrate"
-          ? "가득한 골드 보관함"
-          : chest_name;
       chest_name = chest_name == "chest magical" ? "마법 상자" : chest_name;
-      chest_name =
-        chest_name == "chest megalightning" ? "메가 번개 상자" : chest_name;
       chest_name =
         chest_name == "chest royalwild" ? "로얄 와일드 상자" : chest_name;
       chest_name = chest_name == "chest legendary" ? "전설 상자" : chest_name;
-      chest_name = chest_name == "chest epic" ? "영웅 상자" : chest_name;
 
       if (!chestArray.includes(chest_name)) {
         chestArray.push(chest_name);
@@ -75,21 +68,21 @@ function ClashroyalChest(Kakao, sender, msg, imageDB, room, replier) {
       template_args: {
         img_1: chestImageArray[0],
         img_2: chestImageArray[1],
-        img_3: chestImageArray[6],
-        img_4: chestImageArray[9],
-        img_5: chestImageArray[8],
-        USER_HASHCODE: player_tag,
+        img_3: chestImageArray[2],
+        img_4: chestImageArray[3],
+        img_5: chestImageArray[4],
         chestName_1: chestArray[0],
         chestCount_1: chestCountArray[0],
         chestName_2: chestArray[1],
         chestCount_2: chestCountArray[1],
-        chestName_3: chestArray[6],
-        chestCount_3: chestCountArray[6],
-        chestName_4: chestArray[9],
-        chestCount_4: chestCountArray[9],
-        chestName_5: chestArray[8],
-        chestCount_5: chestCountArray[8],
+        chestName_3: chestArray[2],
+        chestCount_3: chestCountArray[2],
+        chestName_4: chestArray[3],
+        chestCount_4: chestCountArray[3],
+        chestName_5: chestArray[4],
+        chestCount_5: chestCountArray[4],
         USER_ID: player_nickname,
+        USER_HASHCODE: player_tag,
       },
     },
     "custom"
