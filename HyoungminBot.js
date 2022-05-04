@@ -102,6 +102,11 @@ function responseFix(
       ClashroyalClanfuntion(Kakao, msg, imageDB, room, replier);
       return;
     }
+    if (msg.startsWith("/클로봇기능")) {
+      replier.reply(
+        "ℹ️사용가능 기능\n1. 태그 등록 -> 방법 : /태그등록 본인태그\n-> 태그 등록시 #은 제외해주세요.\n2. 내정보확인 -> 방법 : /내정보\n3. 클랜전 남은덱확인 -> 방법 : /클랜전\n-> 본인이 속한 클랜의 전적을 불러오게됩니다.\n4. 클랜지원률 -> 방법: /클랜지원률\n-> 본인이 속한 클랜의 유저 중에서 지원률 100이하의 유저만 불러옵니다.\n"
+      );
+    }
   }
 
   if (room == "가족") {
