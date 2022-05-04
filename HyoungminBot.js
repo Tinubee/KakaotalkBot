@@ -95,11 +95,11 @@ function responseFix(
       msg.startsWith("/태그등록") ||
       msg.startsWith("/내정보삭제")
     ) {
-      ClashRoyalefuction(Kakao, msg, imageDB, room, replier);
+      ClashRoyalefuction(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
     if (msg.startsWith("/클랜전") || msg.startsWith("/클랜지원률")) {
-      ClashroyalClanfuntion(Kakao, msg, imageDB, room, replier);
+      ClashroyalClanfuntion(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
     if (msg.startsWith("/클로봇기능")) {
@@ -141,11 +141,11 @@ function responseFix(
   ) {
     Chatlogfuction(msg, room, sender, replier);
     if (msg.startsWith("/내정보") || msg.startsWith("/태그등록")) {
-      ClashRoyalefuction(Kakao, msg, imageDB, room, replier);
+      ClashRoyalefuction(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
     if (msg.startsWith("/클랜전") || msg.startsWith("/클랜지원률")) {
-      ClashroyalClanfuntion(Kakao, msg, imageDB, room, replier);
+      ClashroyalClanfuntion(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
 

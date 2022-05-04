@@ -1,5 +1,5 @@
-function ClashroyalClan(Kakao, msg, imageDB, room, replier) {
-  let profileHash = imageDB.getProfileHash();
+function ClashroyalClan(Kakao, sender, msg, imageDB, room, replier) {
+  let profileHash = sender;
   if (jsonPlayer[profileHash] == undefined) {
     replier.reply("유저등록 먼저 해주세요.");
     return;

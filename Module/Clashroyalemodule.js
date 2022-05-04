@@ -1,6 +1,6 @@
-function Clashroyal(Kakao, msg, imageDB, room, replier) {
+function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
   if (msg.startsWith("/내정보삭제")) {
-    let profileHash = imageDB.getProfileHash();
+    let profileHash = sender;
     if (jsonPlayer[profileHash] == undefined) {
       replier.reply("⚠️삭제할 정보가 없습니다.");
       return;
@@ -8,15 +8,13 @@ function Clashroyal(Kakao, msg, imageDB, room, replier) {
       jsonPlayer[profileHash] = {};
       fs.write(pathPlayerInfo, JSON.stringify(jsonPlayer, null, 4));
     }
-    replier.reply(
-      "⚠️삭제가 완료되었습니다.\n삭제된 프로필 HashTag : " + profileHash
-    );
+    replier.reply("⚠️삭제가 완료되었습니다.\n삭제된 프로필 : " + profileHash);
   } else if (msg.startsWith("/태그등록")) {
     var reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\(\'\"]/gi;
     var regex = / /gi;
     msg = msg.trim().replace(reg, "").replace(regex, "");
 
-    let profileHash = imageDB.getProfileHash();
+    let profileHash = sender;
     if (jsonPlayer[profileHash] == undefined) jsonPlayer[profileHash] = {};
 
     let player_tag = msg.substr(4);
@@ -56,7 +54,7 @@ function Clashroyal(Kakao, msg, imageDB, room, replier) {
       //Z기 : LPLLYQQU
       //쉼터 : LC0UG8YV
       let player_clanNameHash = "";
-      if (player_clanName == "ALONE") player_clanName = "YJQRVLGY";
+      if (player_clanName == "ALONE") player_clanNameHash = "YJQRVLGY";
       else if (player_clanName == "ALONE 2기") player_clanNameHash = "YJY8VJJQ";
       else if (player_clanName == "ALONE 3기") player_clanNameHash = "YVQ0L9RC";
       else if (player_clanName == "ALONE 플기")
@@ -85,7 +83,7 @@ function Clashroyal(Kakao, msg, imageDB, room, replier) {
       return;
     }
   } else if (msg.startsWith("/내정보")) {
-    let profileHash = imageDB.getProfileHash();
+    let profileHash = sender;
     if (jsonPlayer[profileHash] == undefined) {
       replier.reply(
         "등록된 정보가 없습니다. 정보를 등록해주세요(/태그등록 태그)\n► ex) /태그등록 QYQYRQ8Y"

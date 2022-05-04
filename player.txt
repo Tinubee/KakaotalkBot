@@ -1,0 +1,8 @@
+{
+    "김형민": {
+        "player_clanName": "ALONE 2기",
+        "player_tag": "QYQYRQ8Y",
+        "player_nickname": "chingo",
+        "player_clanNameHash": "YJY8VJJQ"
+    }
+}
