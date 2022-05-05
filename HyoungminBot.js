@@ -22,6 +22,7 @@ const Covid19fuction = require("Covid19module");
 const ClashRoyalefuction = require("Clashroyalemodule");
 const ClashroyalClanfuntion = require("ClashroyalClan");
 const ClashroyalChestfuntion = require("ClashroyalChest");
+const ClashroyaluserInfofuntion = require("ClashroyaluserInfo");
 const Pingpongfuction = require("Pingpongmodule");
 
 const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
@@ -57,6 +58,7 @@ let RegisterRooms = [];
 RegisterRooms = infojson["RegisterRoom"];
 
 const clanArray = ["본기", "2기", "플기", "3기", "Z기", "쉼터"];
+Device.acquireWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "");
 //실질적으로 작동하는 부분 (메세지 오면 답장하는부분)
 function responseFix(
   room,
@@ -70,6 +72,8 @@ function responseFix(
   if (isGroupChat == false) {
     room = sender; //개인톡은 room이 null로들어와서 변경.
   }
+  if (msg == "/봇정보") checkBotStats(room, sender, replier);
+
   if (msg.startsWith("/대화시작") && sender == "김형민") {
     PingpongRunMode = true;
     adminID = msg.substr(5).split(" ")[1].trim();
@@ -99,7 +103,11 @@ function responseFix(
       ClashRoyalefuction(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
-    if (msg.startsWith("/클랜전") || msg.startsWith("/클랜지원률")) {
+    if (
+      msg.startsWith("/클랜전") ||
+      msg.startsWith("/지원률") ||
+      msg.startsWith("/접속률")
+    ) {
       ClashroyalClanfuntion(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
@@ -111,6 +119,10 @@ function responseFix(
     }
     if (msg.startsWith("/상자")) {
       ClashroyalChestfuntion(Kakao, sender, msg, imageDB, room, replier);
+      return;
+    }
+    if (msg.startsWith("/상세정보")) {
+      ClashroyaluserInfofuntion(Kakao, sender, msg, room, replier);
       return;
     }
     Deeplearningfuction(room, msg, sender, replier);
@@ -151,7 +163,11 @@ function responseFix(
       ClashRoyalefuction(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
-    if (msg.startsWith("/클랜전") || msg.startsWith("/클랜지원률")) {
+    if (
+      msg.startsWith("/클랜전") ||
+      msg.startsWith("/지원률") ||
+      msg.startsWith("/접속률")
+    ) {
       ClashroyalClanfuntion(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
@@ -159,7 +175,10 @@ function responseFix(
       ClashroyalChestfuntion(Kakao, sender, msg, imageDB, room, replier);
       return;
     }
-
+    if (msg.startsWith("/상세정보")) {
+      ClashroyaluserInfofuntion(Kakao, sender, msg, room, replier);
+      return;
+    }
     if (msg.startsWith("/문장분석")) {
       MsgParaphrasing(msg, replier);
       return;
@@ -195,6 +214,27 @@ function responseFix(
     Deeplearningfuction(room, msg, sender, replier);
   }
 }
+
+function checkBotStats(room, sender, replier) {
+  let botStats = Device.isCharging();
+  let botBattery = Device.getBatteryLevel();
+  let botTemp = Device.getBatteryTemperature() / 10;
+
+  botStats = botStats ? "충전중" : "충전중 아님";
+
+  replier.reply(
+    "[봇 정보🤖]\n안드로이드 버전 : " +
+      Device.getAndroidVersionName() +
+      "\n배터리 충전 상태 : " +
+      botStats +
+      "\n남은배터리 : " +
+      botBattery +
+      "%\n온도: " +
+      botTemp +
+      "℃"
+  );
+}
+
 function bugipicture(room, replier) {
   try {
     let number = parseInt(Math.random() * 15) + 1;
