@@ -1,4 +1,4 @@
-function ClashroyalClan(Kakao, sender, msg, imageDB, room, replier) {
+function ClashroyalClan(sender, msg, replier) {
   try {
     let profileHash = sender;
     if (jsonPlayer[profileHash] == undefined) {
@@ -68,7 +68,7 @@ function ClashroyalClan(Kakao, sender, msg, imageDB, room, replier) {
                 player_clanName +
                 "◈\n전투일 " +
                 DayNumber +
-                "일차 클랜전 경고 명단\n\n" +
+                "일차 클랜전 남은 전쟁덱\n\n" +
                 userInfo.join("")
             );
           } else {
@@ -106,11 +106,11 @@ function ClashroyalClan(Kakao, sender, msg, imageDB, room, replier) {
         replier.reply(player_clanName + " 지원률 100이하인 유저가 없습니다.😊");
         return;
       }
-    } else if (msg.startsWith("/클랜접속률")) {
+    } else if (msg.startsWith("/접속률")) {
       //클랜원들의 접속률 상태 확인.
     }
   } catch (error) {
-    replier.reply("오류가 발생했습니다.\n오류내용 : " + e);
+    replier.reply("⚠️오류가 발생했습니다.\n오류내용 : " + e);
   }
 }
 

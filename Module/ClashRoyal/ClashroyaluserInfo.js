@@ -1,4 +1,4 @@
-function ClashroyaluserInfo(Kakao, sender, msg, room, replier) {
+function ClashroyaluserInfo(sender, replier) {
   try {
     let profileHash = sender;
     if (jsonPlayer[profileHash] == undefined) {
@@ -60,7 +60,7 @@ function ClashroyaluserInfo(Kakao, sender, msg, room, replier) {
         data.currentFavouriteCard.name
     );
   } catch (e) {
-    replier.reply("오류가 발생했습니다.\n오류내용 : " + e);
+    replier.reply("⚠️오류가 발생했습니다.\n오류내용 : " + e);
   }
 }
 

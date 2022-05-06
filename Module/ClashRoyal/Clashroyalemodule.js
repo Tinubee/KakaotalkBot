@@ -1,4 +1,4 @@
-function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
+function Clashroyal(Kakao, sender, msg, room, replier) {
   try {
     if (msg.startsWith("/내정보삭제")) {
       let profileHash = sender;
@@ -126,7 +126,7 @@ function Clashroyal(Kakao, sender, msg, imageDB, room, replier) {
       );
     }
   } catch (e) {
-    replier.reply("오류가 발생했습니다.\n오류내용 : " + e);
+    replier.reply("⚠️오류가 발생했습니다.\n오류내용 : " + e);
   }
 }
 

@@ -1,4 +1,4 @@
-function ClashroyalChest(Kakao, sender, msg, imageDB, room, replier) {
+function ClashroyalChest(Kakao, sender, room, replier) {
   try {
     let profileHash = sender;
     if (jsonPlayer[profileHash] == undefined) {
@@ -92,7 +92,7 @@ function ClashroyalChest(Kakao, sender, msg, imageDB, room, replier) {
     );
     //카카오링크전송
   } catch (e) {
-    replier.reply("오류가 발생했습니다.\n오류내용 : " + e);
+    replier.reply("⚠️오류가 발생했습니다.\n오류내용 : " + e);
   }
 }
 

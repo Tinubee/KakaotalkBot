@@ -1,4 +1,4 @@
-function pingpong(room, msg, sender, replier, Pingpong_key) {
+function pingpong(msg, replier, Pingpong_key) {
   try {
     let Key = Pingpong_key;
     var json = {
