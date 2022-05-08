@@ -23,6 +23,9 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
   } else if (msg.startsWith("/상세정보")) {
     ClashroyaluserInfofuntion(sender, replier);
     return;
+  } else if (msg.startsWith("/덱추천")) {
+    ClashroyalCardfuntion(Kakao, replier, room);
+    return;
   } else if (msg.startsWith("/로또추천")) {
     Lottofuction(Kakao, room, sender);
     return;

@@ -29,6 +29,7 @@ const coinTrackerfuntion = require("coinTracker");
 const Lottofuction = require("Lottomodule");
 const botstatsCheckfuntion = require("botstatsCheck");
 const menuReccomendfuntion = require("menuReccomend");
+const ClashroyalCardfuntion = require("ClashRoyalCard");
 
 const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
 const Replier = com.xfl.msgbot.script.api.legacy.SessionCacheReplier;
@@ -80,7 +81,6 @@ function responseFix(
   if (isGroupChat == false) {
     room = sender; //개인톡은 room이 null로들어와서 변경.
   }
-
   Chatlogfuction(msg, room, sender, replier); //채팅로그 저장.
   autoReadmsg(room, replier); //자동읽음 처리.
   if (msg.startsWith("/방등록") && sender == "김형민") {
@@ -175,6 +175,7 @@ function MsgParaphrasing(Amsg, Bmsg, replier) {
     replier.reply(error);
   }
 }
+
 //카카오톡 9.7.5 이상 버전에서 사용되는 메세지 처리
 function onNotificationPosted(sbn, sm) {
   var packageName = sbn.getPackageName();
