@@ -13,23 +13,23 @@ const WiKiaccesskey = infojson["AccountInfo"]["WiKiaccesskey"];
 const WiKiaccess_key = WiKiaccesskey;
 Kakao.login(KaKao_Email, KaKao_Email_PassWord);
 
-const messageCheckfuntion = require("messageCheck");
-const registerRoomfuntion = require("registerRoom");
-const Chatlogfuction = require("ChatLogmodule");
-const Deeplearningfuction = require("Deeplearningmodule");
-const Wikifuction = require("Wikimodule");
-const Weatherfuction = require("Weathermodule");
-const Covid19fuction = require("Covid19module");
-const ClashRoyalefuction = require("Clashroyalemodule");
-const ClashroyalClanfuntion = require("ClashroyalClan");
-const ClashroyalChestfuntion = require("ClashroyalChest");
-const ClashroyaluserInfofuntion = require("ClashroyaluserInfo");
-const Pingpongfuction = require("Pingpongmodule");
-const coinTrackerfuntion = require("coinTracker");
-const Lottofuction = require("Lottomodule");
-const botstatsCheckfuntion = require("botstatsCheck");
-const menuReccomendfuntion = require("menuReccomend");
-const ClashroyalCardfuntion = require("ClashRoyalCard");
+const messageCheckfuntion = require("HyoungminBotModule/messageCheck");
+const registerRoomfuntion = require("HyoungminBotModule/registerRoom");
+const Chatlogfuction = require("HyoungminBotModule/ChatLogmodule");
+const Deeplearningfuction = require("HyoungminBotModule/Deeplearningmodule");
+const Wikifuction = require("HyoungminBotModule/Wikimodule");
+const Weatherfuction = require("HyoungminBotModule/Weathermodule");
+const Covid19fuction = require("HyoungminBotModule/Covid19module");
+const ClashRoyalefuction = require("HyoungminBotModule/Clashroyalemodule");
+const ClashroyalClanfuntion = require("HyoungminBotModule/ClashroyalClan");
+const ClashroyalChestfuntion = require("HyoungminBotModule/ClashroyalChest");
+const ClashroyaluserInfofuntion = require("HyoungminBotModule/ClashroyaluserInfo");
+const Pingpongfuction = require("HyoungminBotModule/Pingpongmodule");
+const coinTrackerfuntion = require("HyoungminBotModule/coinTracker");
+const Lottofuction = require("HyoungminBotModule/Lottomodule");
+const botstatsCheckfuntion = require("HyoungminBotModule/botstatsCheck");
+const menuReccomendfuntion = require("HyoungminBotModule/menuReccomend");
+const ClashroyalCardfuntion = require("HyoungminBotModule/ClashRoyalCard");
 
 const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
 const Replier = com.xfl.msgbot.script.api.legacy.SessionCacheReplier;
@@ -65,7 +65,7 @@ let jsonRegisterRoom = JSON.parse(fs.read(pathRegisterRoomInfo));
 
 let PingpongRunMode = false;
 let adminID = "";
-let msgreadCount = 50;
+let msgreadCount = 100;
 Device.acquireWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "");
 
 //실질적으로 작동하는 부분 (메세지 오면 답장하는부분)
@@ -95,6 +95,24 @@ function responseFix(
       //메세지 체크 후 처리.
       messageCheckfuntion(Kakao, room, msg, sender, replier, packageName);
     }
+  }
+  if (msg.startsWith("/대화시작") && sender == "김형민") {
+    PingpongRunMode = true;
+    adminID = msg.substr(5).split(" ")[1].trim();
+    if (adminID == "") {
+      replier.reply("사용자를 입력해주세요");
+      return;
+    }
+    replier.reply(adminID + "하이 ^_^");
+    return;
+  } else if (msg == "/대화종료" && sender == "김형민") {
+    PingpongRunMode = false;
+    replier.reply(adminID + "빠이 ㅅㄱ");
+    adminID = "";
+    return;
+  }
+  if (PingpongRunMode && sender == adminID) {
+    Pingpongfuction(msg, replier, Pingpong_key);
   }
   Deeplearningfuction(room, msg, sender, replier);
 }

@@ -25,7 +25,7 @@ function ClashroyalClan(sender, msg, replier) {
 
     let data = JSON.parse(res);
 
-    if (msg.startsWith("/클랜전")) {
+    if (msg.startsWith("/클랜전") || msg.startsWith("/점수")) {
       let clanWarStateInfo = [];
       for (var k = 4; k <= 7; k++) {
         let clanWarState = clan_war_html
@@ -42,15 +42,23 @@ function ClashroyalClan(sender, msg, replier) {
           let DayNumber = clanWarStateInfo[i].split(" ")[1];
           let clan_UserCount = data.members;
           let userInfo = [];
+          let type = "";
+          if (msg.startsWith("/클랜전")) type = "div.value_bg.decks_used_today";
+          else if (msg.startsWith("/점수")) type = "div.value_bg.fame";
+
           for (var i = 1; i <= parseInt(clan_UserCount); i++) {
             let useDecksCount = clan_war_html
               .select(
                 "#page_content > div.ui.attached.container.sidemargin0.content_container > div:nth-child(3) > table > tbody > tr:nth-child(" +
                   i +
-                  ") > td.player_name > div.player_data > div.value_bg.decks_used_today"
+                  ") > td.player_name > div.player_data > " +
+                  type
               )
               .text();
-            if (useDecksCount != "4") {
+            if (
+              (useDecksCount != "4" && type.includes("decks_used_today")) ||
+              (useDecksCount < 1500 && type.includes("div.value_bg.fame"))
+            ) {
               let userName = clan_war_html
                 .select(
                   "#page_content > div.ui.attached.container.sidemargin0.content_container > div:nth-child(3) > table > tbody > tr:nth-child(" +
@@ -58,25 +66,51 @@ function ClashroyalClan(sender, msg, replier) {
                     ") > td.player_name > div.player_info > a"
                 )
                 .text();
-              userInfo.push(userName + "님 - " + (4 - useDecksCount) + "회\n");
+              if (type == "div.value_bg.decks_used_today") {
+                userInfo.push(
+                  "\n" + userName + "님 - " + (4 - useDecksCount) + "회"
+                );
+              } else if (type == "div.value_bg.fame") {
+                userInfo.push("\n" + userName + "님 - " + useDecksCount + "점");
+              }
             }
           }
 
-          if (userInfo.length > 0) {
+          if (userInfo.length > 0 && type == "div.value_bg.decks_used_today") {
             replier.reply(
-              "◈ " +
+              "◈" +
                 player_clanName +
                 "◈\n전투일 " +
                 DayNumber +
-                "일차 클랜전 남은 전쟁덱\n\n" +
+                "일차 클랜전 남은 전쟁덱\n" +
+                userInfo.join("")
+            );
+          } else if (type == "div.value_bg.fame") {
+            if (userInfo.length == 0) {
+              replier.reply(
+                "◈" +
+                  player_clanName +
+                  "◈\n전투일 " +
+                  DayNumber +
+                  "일차 전원 클랜전 점수 1500점 이상입니다.\n수고하셨습니다🥳"
+              );
+              return;
+            }
+            replier.reply(
+              "◈" +
+                player_clanName +
+                "◈\n전투일 " +
+                DayNumber +
+                "일차 클랜전 점수(1500이하)\n" +
                 userInfo.join("")
             );
           } else {
             replier.reply(
-              player_clanName +
-                " ◈전투일 " +
-                Day +
-                "일차 전원 클랜전 참여 완료하였습니다. 수고하셨습니다🥳"
+              "◈" +
+                player_clanName +
+                "◈\n전투일 " +
+                DayNumber +
+                "일차 전원 클랜전 참여 완료하였습니다.\n수고하셨습니다🥳"
             );
           }
           return;
@@ -91,14 +125,14 @@ function ClashroyalClan(sender, msg, replier) {
         let checkSupport = data.memberList[i].donations;
         if (parseInt(checkSupport) < 100) {
           let AllUserInfo = data.memberList[i].name;
-          userInfo.push(AllUserInfo + "님 : " + checkSupport + "\n");
+          userInfo.push("\n" + AllUserInfo + "님 : " + checkSupport);
         }
       }
       if (userInfo.length > 0) {
         replier.reply(
           "◈ " +
             player_clanName +
-            " ◈\n지원률100이하 명단\n\n" +
+            " ◈\n지원률100이하 명단\n" +
             userInfo.join("")
         );
         return;
@@ -106,10 +140,8 @@ function ClashroyalClan(sender, msg, replier) {
         replier.reply(player_clanName + " 지원률 100이하인 유저가 없습니다.😊");
         return;
       }
-    } else if (msg.startsWith("/접속률")) {
-      //클랜원들의 접속률 상태 확인.
     }
-  } catch (error) {
+  } catch (e) {
     replier.reply("⚠️오류가 발생했습니다.\n오류내용 : " + e);
   }
 }

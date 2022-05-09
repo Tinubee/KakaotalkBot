@@ -13,17 +13,22 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
   } else if (
     msg.startsWith("/클랜전") ||
     msg.startsWith("/지원률") ||
-    msg.startsWith("/접속률")
+    msg.startsWith("/접속률") ||
+    msg.startsWith("/점수")
   ) {
     ClashroyalClanfuntion(sender, msg, replier);
     return;
   } else if (msg.startsWith("/상자")) {
+    replier.reply(
+      "ℹ️" + sender + "님의 상자사이클 정보를 불러오는 중입니다..."
+    );
     ClashroyalChestfuntion(Kakao, sender, room, replier);
     return;
   } else if (msg.startsWith("/상세정보")) {
     ClashroyaluserInfofuntion(sender, replier);
     return;
   } else if (msg.startsWith("/덱추천")) {
+    replier.reply("ℹ️인기덱 50개중 1개를 불러오는 중입니다...");
     ClashroyalCardfuntion(Kakao, replier, room);
     return;
   } else if (msg.startsWith("/로또추천")) {
@@ -50,24 +55,6 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
   } else if (msg.startsWith("/등록방정보")) {
     checkRegisterRoom(room, replier);
     return;
-  } else if (msg.startsWith("/대화시작") && sender == "김형민") {
-    PingpongRunMode = true;
-    adminID = msg.substr(5).split(" ")[1].trim();
-    if (adminID == "") {
-      replier.reply("사용자를 입력해주세요");
-      return;
-    }
-    replier.reply(adminID + "하이 ^_^");
-    return;
-  } else if (msg == "/대화종료" && sender == "김형민") {
-    PingpongRunMode = false;
-    replier.reply(adminID + "빠이 ㅅㄱ");
-    adminID = "";
-    return;
-  }
-
-  if (PingpongRunMode && sender == adminID) {
-    Pingpongfuction(msg, replier, Pingpong_key);
   }
 }
 
