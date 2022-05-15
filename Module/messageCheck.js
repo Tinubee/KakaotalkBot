@@ -19,8 +19,9 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
     ClashroyalClanfuntion(sender, msg, replier);
     return;
   } else if (msg.startsWith("/상자")) {
+    let nickname = jsonPlayer[sender]["player_nickname"];
     replier.reply(
-      "ℹ️" + sender + "님의 상자사이클 정보를 불러오는 중입니다..."
+      "ℹ️ " + nickname + " 님의 상자사이클 정보를 불러오는 중입니다..."
     );
     ClashroyalChestfuntion(Kakao, sender, room, replier);
     return;

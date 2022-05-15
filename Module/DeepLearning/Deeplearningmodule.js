@@ -16,7 +16,7 @@ function DeepLearning(room, msg, sender, replier) {
         line +
         list.join("\n\n")
     );
-    return;
+    return true;
   }
   if (msg.startsWith("/관리자리스트")) {
     let list = [];
@@ -30,7 +30,7 @@ function DeepLearning(room, msg, sender, replier) {
         line +
         list.join("\n\n")
     );
-    return;
+    return true;
   }
   if (msg.startsWith("/금지어리스트")) {
     let list = [];
@@ -44,7 +44,7 @@ function DeepLearning(room, msg, sender, replier) {
         line +
         list.join("\n\n")
     );
-    return;
+    return true;
   }
   if (msg.startsWith("/금지어등록")) {
     if (Object.keys(jsonblacklist[room]).includes(sender).valueOf() == false) {
@@ -52,21 +52,21 @@ function DeepLearning(room, msg, sender, replier) {
       let a = msg.substr(6).replace(regex, "").trim();
       if (a == "") {
         replier.reply("금지할 단어를 써주세요 \n► ex) /금지어등록 오이");
-        return;
+        return true;
       }
       if (jsonBenWord[room][a] != undefined) {
         replier.reply(a + "는 금지단어로 등록되어있습니다.");
-        return;
+        return true;
       }
       let benwordcount = Object.keys(jsonBenWord[room]).length;
       jsonBenWord[room][a] = benwordcount + 1;
       fs.write(pathBenWord, JSON.stringify(jsonBenWord, null, 4));
       benwordcount = Object.keys(jsonBenWord[room]).length;
       replier.reply(sender + "님이 " + a + "를 금지단어로 등록 시켰습니다.");
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 추가할 수 없습니다.");
-      return;
+      return true;
     }
   }
   if (msg.startsWith("/블랙추가")) {
@@ -80,7 +80,7 @@ function DeepLearning(room, msg, sender, replier) {
         a.includes("김형민")
       ) {
         replier.reply(a + "님은 블랙리스트 추가불가능 합니다.");
-        return;
+        return true;
       }
       let blackcount = Object.keys(jsonblacklist[room]).length;
       jsonblacklist[room][a] = blackcount + 1;
@@ -94,10 +94,10 @@ function DeepLearning(room, msg, sender, replier) {
           blackcount +
           "명"
       );
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 관리자가 아닙니다.");
-      return;
+      return true;
     }
   }
   if (msg.startsWith("/관리자등록")) {
@@ -124,10 +124,10 @@ function DeepLearning(room, msg, sender, replier) {
           admincount +
           "명"
       );
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 관리자가 아닙니다.");
-      return;
+      return true;
     }
   }
 
@@ -145,10 +145,10 @@ function DeepLearning(room, msg, sender, replier) {
           blackount +
           "명"
       );
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 관리자가 아닙니다.");
-      return;
+      return true;
     }
   }
 
@@ -157,10 +157,10 @@ function DeepLearning(room, msg, sender, replier) {
       delete jsonBenWord[room][msg.substr(6).trim()];
       fs.write(pathBenWord, JSON.stringify(jsonBenWord, null, 4));
       replier.reply(msg.substr(6).trim() + "를 금지어에서 삭제하였습니다.");
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 삭제할 수 없습니다.");
-      return;
+      return true;
     }
   }
 
@@ -177,23 +177,23 @@ function DeepLearning(room, msg, sender, replier) {
       replier.reply(
         "성공적으로 삭제하였습니다. 현재관리자 : " + admincount + "명"
       );
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 관리자 삭제권한이 없습니다.");
-      return;
+      return true;
     }
   }
 
   if (msg.startsWith("/제시어추가")) {
     if (Object.keys(jsonblacklist[room]).includes(sender).valueOf()) {
       replier.reply(sender + "님은 블랙리스트 입니다. 관리자에게 문의하세요.");
-      return;
+      return true;
     }
     if (msg.split("==").length < 2) {
       replier.reply(
         "[/제시어추가 등록된 제시어(대표1개) == 추가할 제시어] 형식으로 작성해 주세요\n► ex) /제시어추가 안녕 == 하이"
       );
-      return;
+      return true;
     }
     let a = msg.substr(6).split("==")[0].trim();
     let b = msg.substr(msg.split("==")[0].length + 2).trim();
@@ -201,7 +201,7 @@ function DeepLearning(room, msg, sender, replier) {
       replier.reply(
         "추가할 제시어를 써주세요! \n► ex) /제시어추가 " + a + " == 테스트"
       );
-      return;
+      return true;
     }
 
     let benwordlist = [];
@@ -209,7 +209,7 @@ function DeepLearning(room, msg, sender, replier) {
       benwordlist.push("· " + i + " == " + jsonBenWord[room][i]);
       if (msg.includes(i)) {
         replier.reply("금지된 단어가 포함되어 있습니다!\n► 금지된 단어 :" + i);
-        return;
+        return true;
       }
     }
 
@@ -228,7 +228,7 @@ function DeepLearning(room, msg, sender, replier) {
             replier.reply(
               "이미 등록된 제시어가 있습니다!\n► 중복등록 제시어 :" + split_b[m]
             );
-            return;
+            return true;
           }
         }
       }
@@ -240,19 +240,19 @@ function DeepLearning(room, msg, sender, replier) {
       replier.reply(
         "[" + b + "] 라는 제시어가 [" + Findkey[0] + "] 에 추가됐습니다."
       );
-      return;
+      return true;
     }
   }
   if (msg.startsWith("/가르치기")) {
     if (Object.keys(jsonblacklist[room]).includes(sender).valueOf()) {
       replier.reply(sender + "님은 블랙리스트 입니다. 관리자에게 문의하세요.");
-      return;
+      return true;
     }
     if (msg.split("==").length < 2) {
       replier.reply(
         "[/가르치기 반응할 말 == 대답] 형식으로 작성해 주세요\n► ex) /가르치기 안녕 == 만나서 반가워:)"
       );
-      return;
+      return true;
     }
     let a = msg.substr(5).split("==")[0].trim();
     let b = msg.substr(msg.split("==")[0].length + 2).trim();
@@ -260,14 +260,14 @@ function DeepLearning(room, msg, sender, replier) {
       replier.reply(
         "해당 말에 대한 대답을 써주세요! \n► ex) /가르치기 " + a + " == 테스트"
       );
-      return;
+      return true;
     }
     let benwordlist = [];
     for (let i in jsonBenWord[room]) {
       benwordlist.push("· " + i + " == " + jsonBenWord[room][i]);
       if (msg.includes(i)) {
         replier.reply("금지된 단어가 포함되어 있습니다!\n► 금지된 단어 :" + i);
-        return;
+        return true;
       }
     }
 
@@ -296,7 +296,7 @@ function DeepLearning(room, msg, sender, replier) {
           room +
           "] 에서 배운 말이 없습니다. \n[/가르치기 말 == 대답] 형식으로 봇에게 가르쳐 보세요!\n► ex)/ 가르치기 안녕 == 만나서 반가워:)"
       );
-      return;
+      return true;
     }
     let list = [];
     for (let i in jsondb[room]) list.push("· " + i + " == " + jsondb[room][i]);
@@ -308,7 +308,7 @@ function DeepLearning(room, msg, sender, replier) {
         line +
         list.join("\n\n")
     );
-    return;
+    return true;
   }
 
   if (msg == "/초기화") {
@@ -316,10 +316,10 @@ function DeepLearning(room, msg, sender, replier) {
       jsondb[room] = {};
       fs.write(pathdb, JSON.stringify(jsondb, null, 4));
       replier.reply("방 [" + room + "] 에서 배운 말들을 초기화하였습니다");
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 초기화 권한이 없습니다.");
-      return;
+      return true;
     }
   }
   if (msg.startsWith("/답장삭제")) {
@@ -328,7 +328,7 @@ function DeepLearning(room, msg, sender, replier) {
         replier.reply(
           "[/답장삭제 반응할 말 == 대답] 형식으로 작성해 주세요\n► ex) /답장삭제 안녕 == 만나서 반가워:)"
         );
-        return;
+        return true;
       }
       let a = msg.substr(5).split("==")[0].trim();
       let b = msg.substr(msg.split("==")[0].length + 2).trim();
@@ -338,12 +338,12 @@ function DeepLearning(room, msg, sender, replier) {
             a +
             " == 테스트"
         );
-        return;
+        return true;
       }
 
       if (jsondb[room][a] == undefined) {
         replier.reply("아직 배우지 않은 단어입니다");
-        return;
+        return true;
       }
 
       let wordlist = [];
@@ -368,10 +368,11 @@ function DeepLearning(room, msg, sender, replier) {
 
       fs.write(pathdb, JSON.stringify(jsondb, null, 4));
       replier.reply(a + "에 대한 대답 " + b + "(을)를 삭제하였습니다");
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 삭제 권한이 없습니다.");
       return;
+      true;
     }
   }
 
@@ -381,14 +382,14 @@ function DeepLearning(room, msg, sender, replier) {
         replier.reply(
           "[/삭제 배운 말] 형식으로 작성해 주세요. \n► ex) /삭제 배운말"
         );
-        return;
+        return true;
       }
 
       let deleteStr = msg.substr(3).trim();
 
       if (jsondb[room][msg.substr(3).trim()] == undefined) {
         replier.reply("아직 배우지 않은 단어입니다");
-        return;
+        return true;
       }
 
       let str = msg.substr(3).trim();
@@ -397,10 +398,10 @@ function DeepLearning(room, msg, sender, replier) {
 
       fs.write(pathdb, JSON.stringify(jsondb, null, 4));
       replier.reply(str + "를 성공적으로 삭제하였습니다");
-      return;
+      return true;
     } else {
       replier.reply(sender + "님은 삭제 권한이 없습니다.");
-      return;
+      return true;
     }
   }
 
@@ -409,7 +410,7 @@ function DeepLearning(room, msg, sender, replier) {
   var regex = / /gi;
   msg = msg.trim().replace(reg, "").replace(regex, "");
   if (msg == "") {
-    return;
+    return true;
   }
 
   let spl_i = [];
@@ -426,10 +427,10 @@ function DeepLearning(room, msg, sender, replier) {
               Rev_Word_List = jsondb[room][Findkey[km]].split(",");
               let number = parseInt(Math.random() * Rev_Word_List.length);
               replier.reply(Rev_Word_List[number]);
-              return;
+              return true;
             } else {
               replier.reply(jsondb[room][Findkey[km]]);
-              return;
+              return true;
             }
           }
         }
@@ -439,15 +440,16 @@ function DeepLearning(room, msg, sender, replier) {
             Rev_Word_List = jsondb[room][Findkey[km]].split(",");
             let number = parseInt(Math.random() * Rev_Word_List.length);
             replier.reply(Rev_Word_List[number]);
-            return;
+            return true;
           } else {
             replier.reply(jsondb[room][Findkey[km]]);
-            return;
+            return true;
           }
         }
       }
     }
   }
+  return false;
 }
 
 module.exports = DeepLearning;

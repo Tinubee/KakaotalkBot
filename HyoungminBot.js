@@ -17,6 +17,7 @@ const messageCheckfuntion = require("HyoungminBotModule/messageCheck");
 const registerRoomfuntion = require("HyoungminBotModule/registerRoom");
 const Chatlogfuction = require("HyoungminBotModule/ChatLogmodule");
 const Deeplearningfuction = require("HyoungminBotModule/Deeplearningmodule");
+const Pingpongfuction = require("HyoungminBotModule/Pingpongmodule");
 const Wikifuction = require("HyoungminBotModule/Wikimodule");
 const Weatherfuction = require("HyoungminBotModule/Weathermodule");
 const Covid19fuction = require("HyoungminBotModule/Covid19module");
@@ -24,7 +25,6 @@ const ClashRoyalefuction = require("HyoungminBotModule/Clashroyalemodule");
 const ClashroyalClanfuntion = require("HyoungminBotModule/ClashroyalClan");
 const ClashroyalChestfuntion = require("HyoungminBotModule/ClashroyalChest");
 const ClashroyaluserInfofuntion = require("HyoungminBotModule/ClashroyaluserInfo");
-const Pingpongfuction = require("HyoungminBotModule/Pingpongmodule");
 const coinTrackerfuntion = require("HyoungminBotModule/coinTracker");
 const Lottofuction = require("HyoungminBotModule/Lottomodule");
 const botstatsCheckfuntion = require("HyoungminBotModule/botstatsCheck");
@@ -82,7 +82,6 @@ function responseFix(
     room = sender; //개인톡은 room이 null로들어와서 변경.
   }
   Chatlogfuction(msg, room, sender, replier); //채팅로그 저장.
-  autoReadmsg(room, replier); //자동읽음 처리.
   if (msg.startsWith("/방등록") && sender == "김형민") {
     registerRoomfuntion(Kakao, sender, msg, room, replier);
     return;
@@ -94,6 +93,7 @@ function responseFix(
     } else {
       //메세지 체크 후 처리.
       messageCheckfuntion(Kakao, room, msg, sender, replier, packageName);
+      return;
     }
   }
   if (msg.startsWith("/대화시작") && sender == "김형민") {
@@ -113,8 +113,12 @@ function responseFix(
   }
   if (PingpongRunMode && sender == adminID) {
     Pingpongfuction(msg, replier, Pingpong_key);
+    return;
   }
-  Deeplearningfuction(room, msg, sender, replier);
+  if (Deeplearningfuction(room, msg, sender, replier)) {
+    return;
+  }
+  autoReadmsg(room, replier); //자동읽음 처리.
 }
 
 //등록된 방정보 출력.
