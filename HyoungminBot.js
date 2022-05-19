@@ -122,7 +122,7 @@ function responseFix(
 }
 
 //등록된 방정보 출력.
-function checkRegisterRoom(room, replier) {
+function checkRegisterRoom(replier) {
   let roomList = [];
   for (let key in jsonRegisterRoom) {
     roomList.push(key);
@@ -131,7 +131,7 @@ function checkRegisterRoom(room, replier) {
 }
 
 //자동읽음추가
-function autoReadmsg(room, replier) {
+function autoReadmsg(room) {
   if (msgCount[room] === undefined) {
     msgCount[room] = 0;
   }
