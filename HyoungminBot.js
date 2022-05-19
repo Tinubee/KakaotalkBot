@@ -138,7 +138,6 @@ function autoReadmsg(room, replier) {
   msgCount[room]++;
   if (msgCount[room] > msgreadCount) {
     Api.markAsRead(room);
-    replier.reply("ℹ️ 원활한 봇 가동을 위해 밀린 채팅을 자동읽음 처리합니다.");
     msgCount[room] = 0;
   }
 }
