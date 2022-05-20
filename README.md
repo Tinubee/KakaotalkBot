@@ -1,4 +1,4 @@
-# Hyoungmin's KakaotalkBot
+# Hyoungmin's KakaotalkBot <img src="https://slackmojis.com/emojis/10796-among_us_party/image/10796/among_us_party.gif?1643514230" width="30"/>
 
 - 메신저봇R & archethic님의 KakaoLink Module 사용
 - Link:https://github.com/archethic/kakaolink
