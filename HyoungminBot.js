@@ -81,7 +81,12 @@ function responseFix(
   if (isGroupChat == false) {
     room = sender; //개인톡은 room이 null로들어와서 변경.
   }
-  Chatlogfuction(msg, room, sender, replier); //채팅로그 저장.
+  if (jsonRegisterRoom[room] == undefined) {
+    return;
+  } else {
+    Chatlogfuction(msg, room, sender, replier);
+  }
+
   if (msg.startsWith("/방등록") && sender == "김형민") {
     registerRoomfuntion(Kakao, sender, msg, room, replier);
     return;
@@ -91,7 +96,6 @@ function responseFix(
       replier.reply("⚠️등록된방이 아닙니다.\n방등록을 먼저 해주세요.");
       return;
     } else {
-      //메세지 체크 후 처리.
       messageCheckfuntion(Kakao, room, msg, sender, replier, packageName);
       return;
     }
@@ -139,61 +143,6 @@ function autoReadmsg(room) {
   if (msgCount[room] > msgreadCount) {
     Api.markAsRead(room);
     msgCount[room] = 0;
-  }
-}
-//부기사진
-function bugipicture(room, replier) {
-  try {
-    let number = parseInt(Math.random() * 15) + 1;
-    let img_url =
-      "https://res.cloudinary.com/dmvu7wol7/image/upload/v1647151572/부기/부기" +
-      number +
-      ".jpg";
-
-    Kakao.sendLink(
-      room,
-      {
-        template_id: 72908,
-        template_args: {
-          img: img_url,
-        },
-      },
-      "custom"
-    );
-  } catch (error) {
-    replier.reply(error);
-  }
-}
-
-//문장간 유사도 검출
-function MsgParaphrasing(Amsg, Bmsg, replier) {
-  try {
-    var openApiURL = "http://aiopen.etri.re.kr:8000/ParaphraseQA";
-    var access_key = WiKiaccess_key;
-
-    var requestJson = {
-      access_key: access_key,
-      argument: {
-        sentence1: Amsg,
-        sentence2: Bmsg,
-      },
-    };
-
-    result = org.jsoup.Jsoup.connect(openApiURL)
-      .userAgent("Mozilla")
-      .ignoreContentType(true)
-      .header("Content-Type", "application/json;charset=UTF-8")
-      .requestBody(JSON.stringify(requestJson))
-      .post();
-
-    r = JSON.parse(result.body().text());
-    if (r.return_object.result == "paraphrase") {
-      return true; //paraphrase (두 문장의 의미가 동등함)
-    } else {
-      return false; //non-paraphrase (두 문장의 의미가 다름)
-    }
-  } catch (error) {
-    replier.reply(error);
   }
 }
 
