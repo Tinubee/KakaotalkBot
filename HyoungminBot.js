@@ -97,10 +97,9 @@ function responseFix(
       return;
     } else {
       messageCheckfuntion(Kakao, room, msg, sender, replier, packageName);
-      return;
     }
   }
-  if (msg.startsWith("/대화시작") && sender == "김형민") {
+  if (msg.startsWith("@대화시작") && sender == "김형민") {
     PingpongRunMode = true;
     adminID = msg.substr(5).split(" ")[1].trim();
     if (adminID == "") {
@@ -109,7 +108,7 @@ function responseFix(
     }
     replier.reply(adminID + "하이 ^_^");
     return;
-  } else if (msg == "/대화종료" && sender == "김형민") {
+  } else if (msg == "@대화종료" && sender == "김형민") {
     PingpongRunMode = false;
     replier.reply(adminID + "빠이 ㅅㄱ");
     adminID = "";
@@ -125,6 +124,28 @@ function responseFix(
   autoReadmsg(room, replier); //자동읽음 처리.
 }
 
+function bugipicture(room, replier) {
+  try {
+    let number = parseInt(Math.random() * 15) + 1;
+    let img_url =
+      "https://res.cloudinary.com/dmvu7wol7/image/upload/v1647151572/부기/부기" +
+      number +
+      ".jpg";
+
+    Kakao.sendLink(
+      room,
+      {
+        template_id: 72908,
+        template_args: {
+          img: img_url,
+        },
+      },
+      "custom"
+    );
+  } catch (error) {
+    replier.reply(error);
+  }
+}
 //등록된 방정보 출력.
 function checkRegisterRoom(replier) {
   let roomList = [];
