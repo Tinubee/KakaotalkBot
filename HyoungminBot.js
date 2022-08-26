@@ -30,6 +30,7 @@ const Lottofuction = require("HyoungminBotModule/Lottomodule");
 const botstatsCheckfuntion = require("HyoungminBotModule/botstatsCheck");
 const menuReccomendfuntion = require("HyoungminBotModule/menuReccomend");
 const ClashroyalCardfuntion = require("HyoungminBotModule/ClashRoyalCard");
+const Nwordfuntion = require("HyoungminBotModule/Nword");
 
 const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
 const Replier = com.xfl.msgbot.script.api.legacy.SessionCacheReplier;

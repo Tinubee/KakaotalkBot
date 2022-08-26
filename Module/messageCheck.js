@@ -53,6 +53,9 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
   } else if (msg.startsWith("/봇정보")) {
     botstatsCheckfuntion(replier, scriptName);
     return;
+  } else if (msg.startsWith("/n행시")) {
+    Nwordfuntion(msg, replier);
+    return;
   } else if (msg.startsWith("/등록방정보")) {
     checkRegisterRoom(room, replier);
     return;
