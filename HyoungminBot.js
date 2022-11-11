@@ -1,17 +1,33 @@
-const { KakaoLinkClient } = require("kakaolink");
+const { KakaoApiService, KakaoLinkClient } = require("kakaolink");
+const Kakao = new KakaoLinkClient();
 const InfoPath = "sdcard/msgbot/Bots/HyoungminBot/Info.json";
 const infojson = JSON.parse(FileStream.read(InfoPath));
 
 const kakaoapikey = infojson["AccountInfo"]["KaKao_APIKey"];
 const KaKao_Email = infojson["AccountInfo"]["Kakao_Email"];
 const KaKao_Email_PassWord = infojson["AccountInfo"]["KaKao_Email_PassWord"];
-const Kakao = new KakaoLinkClient(kakaoapikey, "http://naver.com");
+
+KakaoApiService.createService()
+  .login({
+    email: KaKao_Email,
+    password: KaKao_Email_PassWord,
+    keepLogin: true,
+  })
+  .then((e) => {
+    Kakao.login(e, {
+      apiKey: kakaoapikey,
+      url: "http://naver.com",
+    });
+  })
+  .catch((e) => {
+    Log.e(e);
+  });
+
 const Pingpongapikey = infojson["AccountInfo"]["Pingpong_APIKey"];
 const Pingpong_key = Pingpongapikey;
 
 const WiKiaccesskey = infojson["AccountInfo"]["WiKiaccesskey"];
 const WiKiaccess_key = WiKiaccesskey;
-Kakao.login(KaKao_Email, KaKao_Email_PassWord);
 
 const messageCheckfuntion = require("HyoungminBotModule/messageCheck");
 const registerRoomfuntion = require("HyoungminBotModule/registerRoom");
