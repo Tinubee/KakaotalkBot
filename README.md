@@ -1,7 +1,7 @@
 # Hyoungmin's KakaotalkBot <img src="https://slackmojis.com/emojis/10796-among_us_party/image/10796/among_us_party.gif?1643514230" width="30"/>
 
 - 메신저봇R & archethic님의 KakaoLink Module 사용
-- Link:https://github.com/archethic/kakaolink
+- Link:https: https://github.com/naijun0403/kakaolink
 
 ## 0. 봇정보
 
@@ -31,7 +31,7 @@
 
 가르치기 (반응할 말 == 대답) : 특정단어에 반응할 대답 등록.
 
-~~db : 해당방에서 배운 단어 목록.~~
+db : 해당방에서 배운 단어 목록.
 
 제시어추가 등록된 제시어(대표1개) == 추가할 제시어 : 반응할 말 추가 등록.
 
@@ -41,9 +41,9 @@
 
 블랙리스트 : 블랙리스트 목록 조회.
 
-~~관리자리스트 : 관리자리스트 목록 조회.~~
+관리자리스트 : 관리자리스트 목록 조회.
 
-~~금지어리스트 : 금지어리스트 목록 조회.~~
+금지어리스트 : 금지어리스트 목록 조회.
 
 블랙삭제 (이름) : 블랙리스트 목록에서 제거.
 
