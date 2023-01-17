@@ -56,6 +56,9 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
   } else if (msg.startsWith("/n행시")) {
     Nwordfuntion(msg, replier);
     return;
+  } else if (msg.startsWith("/캐치")) {
+    CatchMind(Kakao, msg, room, sender, replier);
+    return;
   } else if (msg.startsWith("/등록방정보")) {
     checkRegisterRoom(room, replier);
     return;
