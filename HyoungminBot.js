@@ -29,6 +29,8 @@ const Pingpong_key = Pingpongapikey;
 const WiKiaccesskey = infojson["AccountInfo"]["WiKiaccesskey"];
 const WiKiaccess_key = WiKiaccesskey;
 
+const OpenAI_APIKey = infojson["AccountInfo"]["OpenAI_APIKey"];
+
 const messageCheckfuntion = require("HyoungminBotModule/messageCheck");
 const registerRoomfuntion = require("HyoungminBotModule/registerRoom");
 const Chatlogfuction = require("HyoungminBotModule/ChatLogmodule");
