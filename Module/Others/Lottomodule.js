@@ -1,4 +1,4 @@
-function Lotto(Kakao, roomName, sender) {
+function Lotto(Kakao, roomName, sender, replier) {
   try {
     let lotto = [];
     while (lotto.length < 6) {

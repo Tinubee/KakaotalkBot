@@ -33,7 +33,7 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
     ClashroyalCardfuntion(Kakao, replier, room);
     return;
   } else if (msg.startsWith("/로또추천")) {
-    Lottofuction(Kakao, room, sender);
+    Lottofuction(Kakao, room, sender, replier);
     return;
   } else if (msg.startsWith("/코로나")) {
     Covid19fuction(Kakao, msg, room, replier);
