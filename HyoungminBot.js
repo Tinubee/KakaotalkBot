@@ -12,6 +12,7 @@ KakaoApiService.createService()
     email: KaKao_Email,
     password: KaKao_Email_PassWord,
     keepLogin: true,
+    twoFA: true,
   })
   .then((e) => {
     Kakao.login(e, {
