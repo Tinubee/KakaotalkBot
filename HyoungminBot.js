@@ -54,12 +54,14 @@ const WiKiaccesskey = infojson["AccountInfo"]["WiKiaccesskey"];
 const WiKiaccess_key = WiKiaccesskey;
 
 const OpenAI_APIKey = infojson["AccountInfo"]["OpenAI_APIKey"];
+const ChatGPT_APIKey = infojson["AccountInfo"]["ChatGPT_APIKey"];
 
 const messageCheckfuntion = require("HyoungminBotModule/messageCheck");
 const registerRoomfuntion = require("HyoungminBotModule/registerRoom");
 const Chatlogfuction = require("HyoungminBotModule/ChatLogmodule");
 const Deeplearningfuction = require("HyoungminBotModule/Deeplearningmodule");
 const Pingpongfuction = require("HyoungminBotModule/Pingpongmodule");
+const ChatGPTfunction = require("HyoungminBotModule/ChatGPT");
 const Wikifuction = require("HyoungminBotModule/Wikimodule");
 const Weatherfuction = require("HyoungminBotModule/Weathermodule");
 const Covid19fuction = require("HyoungminBotModule/Covid19module");
@@ -73,6 +75,7 @@ const botstatsCheckfuntion = require("HyoungminBotModule/botstatsCheck");
 const menuReccomendfuntion = require("HyoungminBotModule/menuReccomend");
 const ClashroyalCardfuntion = require("HyoungminBotModule/ClashRoyalCard");
 const Nwordfuntion = require("HyoungminBotModule/Nword");
+const CatchMindfuntion = require("HyoungminBotModule/CatchMind");
 
 const ImageDB = com.xfl.msgbot.script.api.legacy.ImageDB;
 const Replier = com.xfl.msgbot.script.api.legacy.SessionCacheReplier;
@@ -109,6 +112,11 @@ let jsonRegisterRoom = JSON.parse(fs.read(pathRegisterRoomInfo));
 let PingpongRunMode = false;
 let adminID = "";
 let msgreadCount = 100;
+
+let GameStart = false,
+  GameSet,
+  GameRoom;
+
 Device.acquireWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "");
 
 //실질적으로 작동하는 부분 (메세지 오면 답장하는부분)
@@ -142,6 +150,7 @@ function responseFix(
       messageCheckfuntion(Kakao, room, msg, sender, replier, packageName);
     }
   }
+
   if (msg.startsWith("@대화시작") && sender == "김형민") {
     PingpongRunMode = true;
     adminID = msg.substr(5).split(" ")[1].trim();

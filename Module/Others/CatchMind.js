@@ -1,9 +1,7 @@
 function CatchMind(Kakao, msg, room, sender, replier) {
   try {
-    let GameStart = false,
-      GameSet,
-      GameRoom;
     let json = ApiRse("https://catchmind.netmarble.com/api/quiz/random");
+
     if (!GameStart) {
       let shuffledData = json.resultData.sort(() => Math.random() - 0.5);
       let currentProblem =
@@ -29,7 +27,7 @@ function CatchMind(Kakao, msg, room, sender, replier) {
       GameRoom = room;
     } else {
       if (GameRoom == room) {
-        if (GameSet && msg == "/캐치 종료") {
+        if (GameSet && msg == "/캐치종료") {
           replier.reply(
             "게임 종료 되었습니다!\n해당 문제의 정답은 " +
               GameSet.word +
@@ -44,6 +42,10 @@ function CatchMind(Kakao, msg, room, sender, replier) {
         } else {
           replier.reply(GameRoom, "틀렸습니다!");
         }
+      } else {
+        replier.reply(
+          "다른방에서 게임이 진행중 입니다. 잠시 후 다시 시도해주세요.😀"
+        );
       }
     }
   } catch (error) {
@@ -56,7 +58,7 @@ const ApiRse = (r) => {
     return null == r
       ? "값을 입력하지 않았습니다."
       : JSON.parse(
-          Jsoup.connect(r)
+          org.jsoup.Jsoup.connect(r)
             .ignoreContentType(true)
             .ignoreHttpErrors(true)
             .execute()
