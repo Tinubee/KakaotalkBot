@@ -1,5 +1,6 @@
 const { KakaoApiService, KakaoLinkClient } = require("kakaolink");
 const Kakao = new KakaoLinkClient();
+
 const InfoPath = "sdcard/msgbot/Bots/HyoungminBot/Info.json";
 const infojson = JSON.parse(FileStream.read(InfoPath));
 
@@ -7,22 +8,44 @@ const kakaoapikey = infojson["AccountInfo"]["KaKao_APIKey"];
 const KaKao_Email = infojson["AccountInfo"]["Kakao_Email"];
 const KaKao_Email_PassWord = infojson["AccountInfo"]["KaKao_Email_PassWord"];
 
-KakaoApiService.createService()
-  .login({
-    email: KaKao_Email,
-    password: KaKao_Email_PassWord,
-    keepLogin: true,
-    twoFA: true,
-  })
-  .then((e) => {
-    Kakao.login(e, {
-      apiKey: kakaoapikey,
-      url: "http://naver.com",
+const FS = FileStream;
+const PATH = infojson["AccountInfo"]["FSPath"];
+
+let cookies = FS.read(PATH);
+if (cookies === null) {
+  cookies = {};
+  FS.write(PATH, "{}");
+} else {
+  cookies = JSON.parse(cookies);
+}
+
+if (Object.keys(cookies).length === 0) {
+  KakaoApiService.createService()
+    .login({
+      email: KaKao_Email,
+      password: KaKao_Email_PassWord,
+      keepLogin: true,
+    })
+    .then((rawCookie) => {
+      let jsonObj = {};
+      rawCookie.forEach((k, v) => {
+        jsonObj[k] = v;
+      });
+      FS.write(PATH, JSON.stringify(jsonObj));
+      Kakao.login(rawCookie, {
+        apiKey: kakaoapikey,
+        url: "http://naver.com",
+      });
+    })
+    .catch((e) => {
+      throw e;
     });
-  })
-  .catch((e) => {
-    Log.e(e);
+} else {
+  Kakao.login(cookies, {
+    apiKey: kakaoapikey,
+    url: "http://naver.com",
   });
+}
 
 const Pingpongapikey = infojson["AccountInfo"]["Pingpong_APIKey"];
 const Pingpong_key = Pingpongapikey;
