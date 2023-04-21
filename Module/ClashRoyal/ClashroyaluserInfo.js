@@ -20,9 +20,12 @@ function ClashroyaluserInfo(sender, replier) {
 
     let data = JSON.parse(res);
 
+    let clanName =
+      (typeof data.clan === "undefined") === true ? "-" : data.clan.name;
+
     replier.reply(
       "✅" +
-        data.clan.name +
+        clanName +
         " - " +
         data.name +
         "님의 정보입니다✅\n\n" +

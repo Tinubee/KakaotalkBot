@@ -96,7 +96,9 @@ function Clashroyal(Kakao, sender, msg, room, replier) {
           "#page_content > div:nth-child(5) > div.ui.top.attached.padded.segment > div:nth-child(1) > img"
         )
         .attr("src");
-      let clanName = data.clan.name;
+
+      let clanName =
+        (typeof data.clan === "undefined") === true ? "-" : data.clan.name;
 
       if (clanName != jsonPlayer[profileHash]["player_clanName"]) {
         jsonPlayer[profileHash]["player_clanName"] = clanName;
