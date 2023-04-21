@@ -10,6 +10,12 @@ function ClashroyalClan(sender, msg, replier) {
 
     let player_clanName = jsonPlayer[profileHash]["player_clanName"];
     let player_clanNameHash = jsonPlayer[profileHash]["player_clanNameHash"];
+    let player_nickname = jsonPlayer[profileHash]["player_nickname"];
+
+    if (player_clanName === "-" || player_clanNameHash === "-") {
+      replier.reply("⚠️" + player_nickname + " 님은 가입된 클랜이 없습니다");
+      return;
+    }
 
     let clan_war_url =
       "https://royaleapi.com/clan/" + player_clanNameHash + "/war/race";

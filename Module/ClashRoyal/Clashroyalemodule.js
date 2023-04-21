@@ -43,14 +43,15 @@ function Clashroyal(Kakao, sender, msg, room, replier) {
           return;
         }
         let player_nickname = data.name;
-        let player_clanName = data.clan.name;
+        let player_clanName =
+          (typeof data.clan === "undefined") === true ? "-" : data.clan.name;
         jsonPlayer[profileHash]["player_clanName"] = player_clanName;
         jsonPlayer[profileHash]["player_tag"] = player_tag;
         jsonPlayer[profileHash]["player_nickname"] = player_nickname;
-        jsonPlayer[profileHash]["player_clanNameHash"] = data.clan.tag.replace(
-          "#",
-          ""
-        );
+        let player_clanTag = (jsonPlayer[profileHash]["player_clanNameHash"] =
+          (typeof data.clan === "undefined") === true
+            ? "-"
+            : data.clan.tag.replace("#", ""));
 
         fs.write(pathPlayerInfo, JSON.stringify(jsonPlayer, null, 4));
         replier.reply(
@@ -61,7 +62,7 @@ function Clashroyal(Kakao, sender, msg, room, replier) {
             "\n클랜명 : " +
             player_clanName +
             " (" +
-            data.clan.tag +
+            player_clanTag +
             ")" +
             "\n등록되었습니다."
         );
