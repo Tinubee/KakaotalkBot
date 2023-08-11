@@ -51,7 +51,7 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
     Wikifuction(msg, WiKiaccess_key, replier);
     return;
   } else if (msg.startsWith("/봇정보")) {
-    botstatsCheckfuntion(replier, scriptName);
+    botstatsCheckfuntion(replier, scriptName, room);
     return;
   } else if (msg.startsWith("/n행시")) {
     Nwordfuntion(msg, replier);
