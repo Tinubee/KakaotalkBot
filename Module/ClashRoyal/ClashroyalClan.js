@@ -21,15 +21,18 @@ function ClashroyalClan(sender, msg, replier) {
       "https://royaleapi.com/clan/" + player_clanNameHash + "/war/race";
     let clan_war_html = org.jsoup.Jsoup.connect(clan_war_url).get();
 
-    let clan_url_json =
-      "https://link-api.clashroyale.com/clans/%23" + player_clanNameHash;
-    let res = org.jsoup.Jsoup.connect(clan_url_json)
-      .ignoreContentType(true)
-      .ignoreHttpErrors(true)
-      .get()
-      .text();
+    let clan_url_json = "https://royaleapi.com/clan/" + player_clanNameHash;
+    // let clan_url_json =
+    //   "https://link-api.clashroyale.com/clans/%23" + player_clanNameHash;
 
-    let data = JSON.parse(res);
+    let clan_info_html = org.jsoup.Jsoup.connect(clan_url_json).get();
+
+    let membercount = clan_info_html
+      .select(
+        "#page_content > div.ui.attached.container.sidemargin0.content_container > div:nth-child(1) > div > div.doubling.three.column.row > div:nth-child(4) > div > div"
+      )
+      .text()
+      .split("/")[0];
 
     if (msg.startsWith("/클랜전") || msg.startsWith("/점수")) {
       let clanWarStateInfo = [];
@@ -42,16 +45,14 @@ function ClashroyalClan(sender, msg, replier) {
         }
         clanWarStateInfo.push(clanWarState);
       }
-
       for (var i = 0; i < clanWarStateInfo.length; i++) {
         if (clanWarStateInfo[i].includes("Day")) {
           let DayNumber = clanWarStateInfo[i].split(" ")[1];
-          let clan_UserCount = data.members;
+          let clan_UserCount = membercount;
           let userInfo = [];
           let type = "";
           if (msg.startsWith("/클랜전")) type = "div.value_bg.decks_used_today";
           else if (msg.startsWith("/점수")) type = "div.value_bg.fame";
-
           for (var i = 1; i <= parseInt(clan_UserCount); i++) {
             let useDecksCount = clan_war_html
               .select(
@@ -81,14 +82,13 @@ function ClashroyalClan(sender, msg, replier) {
               }
             }
           }
-
           if (userInfo.length > 0 && type == "div.value_bg.decks_used_today") {
             replier.reply(
               "◈" +
                 player_clanName +
                 "◈\n전투일 " +
                 DayNumber +
-                "일차 클랜전 남은 전쟁덱\n" +
+                "일차 클랜전 미참여자명단\n" +
                 userInfo.join("")
             );
           } else if (type == "div.value_bg.fame") {
