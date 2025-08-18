@@ -146,6 +146,8 @@ function ClashroyalClan(sender, msg, replier) {
         replier.reply(player_clanName + " 지원률 100이하인 유저가 없습니다.😊");
         return;
       }
+    } else if (msg.startsWith("/관리자전용링크")) {
+      replier.reply("https://tinubee.github.io/clashroyale_clanmanagement/");
     }
   } catch (e) {
     replier.reply("⚠️오류가 발생했습니다.\n오류내용 : " + e);

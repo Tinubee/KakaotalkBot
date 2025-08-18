@@ -14,7 +14,8 @@ function messageCheck(Kakao, room, msg, sender, replier, packageName) {
     msg.startsWith("/클랜전") ||
     msg.startsWith("/지원률") ||
     msg.startsWith("/접속률") ||
-    msg.startsWith("/점수")
+    msg.startsWith("/점수") ||
+    msg.startsWith("/관리자전용링크")
   ) {
     ClashroyalClanfuntion(sender, msg, replier);
     return;
